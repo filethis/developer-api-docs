@@ -1,0 +1,2592 @@
+{
+	"variables": [],
+	"info": {
+		"name": "FileThis Workflows",
+		"_postman_id": "1115bf0e-55a9-601b-c5f6-03427a117609",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Challenge Question",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (challenge-question)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"bWZhcXVlc3Rpb24=\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Respond to interaction with correct answer to challenge question",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions/{{interactionId}}/response",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"1.0.0\",\n  \"id\": \"{{interactionId}}\",\n  \"parts\":\n\t[\n\t    {\n            \"id\": \"V2hhdCBpcyB5b3VyIG1vdGhlcidzIG1haWRlbiBuYW1lPw==\",\n            \"value\": \"Smith\"\n        }\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Credentials Invalid Question",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (invalid-creds)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"d3Jvbmc=\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Respond to user interaction request with correct credentials",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions/{{interactionId}}/response",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"1.0.0\",\n  \"id\": \"{{interactionId}}\",\n  \"parts\":\n\t[\n\t    {\n            \"id\": \"dXNlcm5hbWU=\",\n            \"value\": \"user\"\n        },\n        {\n            \"id\": \"cGFzc3dvcmQ=\",\n            \"value\": \"pass\"\n        }\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get bill documents",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (bills)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"YmlsbHM=\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get notice documents",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (bills)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"bm90aWNlcw==\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get statement documents",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (bills)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"c3RhdGVtZW50cw==\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Multiple-Multiple Choice Question",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (multiple-multiple)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"b25ldGltZWF1dGhtdWx0aXBsZQ==\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Respond to interaction with correct choices",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions/{{interactionId}}/response",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"1.0.0\",\n  \"id\": \"{{interactionId}}\",\n  \"parts\":\n\t[\n\t    {\n            \"id\": \"V2hhdCdzIHlvdXIgbW90aGVyJ3MgbWFpZGVuIG5hbWU/\",\n            \"value\": \"cXVlc3Rpb25zMF8w\"\n        },\n\t    {\n            \"id\": \"V2hhdCdzIHlvdXIgZmF2b3JpdGUgY29sb3I/\",\n            \"value\": \"cXVlc3Rpb25zMV8w\"\n        }\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OTA Question",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (OTA)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"b25ldGltZWF1dGg=\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Respond to interaction to choose delivery method",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions/{{interactionId}}/response",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"1.0.0\",\n  \"id\": \"{{interactionId}}\",\n  \"parts\":\n\t[\n\t    {\n            \"id\": \"aWRlbnRpZmljYXRpb25Db2RlRGVsaXZlcnlNZXRob2Q=\",\n            \"value\": \"U2VuZCB0ZXh0IHRvIHBob25lIDAwMC0wMDAtMDAwMA==\"\n        }\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Respond to interaction to provide OTA code",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions/{{interactionId}}/response",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"1.0.0\",\n  \"id\": \"{{interactionId}}\",\n  \"parts\":\n\t[\n\t    {\n            \"id\": \"aWRlbnRpZmljYXRpb25Db2Rl\",\n            \"value\": \"123456\"\n        }\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OTA Question - Timed Out and Retry",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (OTA)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"b25ldGltZWF1dGg=\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Wait ten minutes for the OTA code request to time out",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "/",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Respond to interaction to acknowledge timout",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions/{{interactionId}}/response",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"1.0.0\",\n  \"id\": \"{{interactionId}}\",\n  \"parts\":\n\t[\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PIN Question",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (invalid-pin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"cGluZmFpbA==\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Respond to user interaction request with PIN",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions/{{interactionId}}/response",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"1.0.0\",\n  \"id\": \"{{interactionId}}\",\n  \"parts\":\n    [\n        {\n            \"id\": \"cGluLWNvZGUtdjI=\",\n            \"value\": \"1234\"\n        }\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Action Required",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst accountId = response.id;\npostman.setEnvironmentVariable(\"accountId\", accountId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerAccountId\": \"{{$guid}}\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create connection to fake source  (user-action-required)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst connectionId = response.id;\npostman.setEnvironmentVariable(\"connectionId\", connectionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);\n\npostman.setEnvironmentVariable(\"userEncoded\", btoa(\"user\"));\npostman.setEnvironmentVariable(\"billsEncoded\", btoa(\"bills\"));\n\n"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain; charset=utf-8",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"dXNlcg==\",\n  \"password\": \"dXNlcmFjdGlvbnJlcXVpcmVkZmFpbA==\",\n  \"historicalPeriod\": \"2\",\n  \"sourceId\": \"100100\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read user interaction requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const response = JSON.parse(responseBody);\nconst interactionId = response[0].id;\npostman.setEnvironmentVariable(\"interactionId\", interactionId);"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Respond to user interaction",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}/connections/{{connectionId}}/interactions/{{interactionId}}/response",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"1.0.0\",\n  \"id\": \"{{interactionId}}\",\n  \"parts\":\n\t[\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read change notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/changes?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Read document delivery records",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/deliveries?count=20",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete account",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": "const apiKey = postman.getEnvironmentVariable(\"api-key\");\nconst apiSecret = postman.getEnvironmentVariable(\"api-secret\");\nconst auth = apiKey + \":\" + apiSecret;\nconst authEncoded = btoa(auth);\npostman.setEnvironmentVariable(\"auth\", authEncoded);"
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/api/v1/accounts/{{accountId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{auth}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

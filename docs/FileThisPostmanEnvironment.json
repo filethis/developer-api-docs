@@ -1,0 +1,52 @@
+{
+  "id": "75947ece-8615-a0ec-b3fb-8bc1e0f08555",
+  "name": "FileThis",
+  "values": [
+    {
+      "key": "url",
+      "type": "text",
+      "value": "https://filethis.com",
+      "enabled": true
+    },
+    {
+      "key": "api-key",
+      "type": "text",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "api-secret",
+      "type": "text",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "auth",
+      "type": "text",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "accountId",
+      "type": "text",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "connectionId",
+      "type": "text",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "interactionId",
+      "type": "text",
+      "value": "",
+      "enabled": true
+    }
+  ],
+  "timestamp": 1478650482344,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2016-11-09T00:15:58.184Z",
+  "_postman_exported_using": "Postman/4.8.1"
+}

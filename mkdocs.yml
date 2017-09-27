@@ -1,0 +1,20 @@
+site_name: FileThisConnect SDK
+
+theme: readthedocs
+
+site_favicon: favicon.ico
+
+pages:
+- 'Home': index.md
+- FileThis Rest API:
+    - 'Intro': placeholder.md
+    - 'Workflow Simulations': placeholder.md
+    - 'Connection States': placeholder.md
+- Change Notifications:
+  - 'Intro': placeholder.md
+  - 'Receiving Change Notifications': placeholder.md
+  - 'Schema and Examples': placeholder.md
+  - 'Subscribers and Subscriptions': placeholder.md
+- Webhook Request Signatures:
+  - 'Intro': placeholder.md
+
