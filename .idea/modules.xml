@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/developer-docs.iml" filepath="$PROJECT_DIR$/developer-docs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/developer-api-docs.iml" filepath="$PROJECT_DIR$/developer-api-docs.iml" />
     </modules>
   </component>
 </project>

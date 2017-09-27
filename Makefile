@@ -2,7 +2,7 @@
 
 NAME=developer-api-docs
 VERSION=0.0.1
-LOCAL_PORT=1025
+LOCAL_PORT=2022
 
 
 # Running -----------------------------------------------------------------------------------
